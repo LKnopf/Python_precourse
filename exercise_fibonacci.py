@@ -18,8 +18,29 @@ Put your code in this section of the script:
 
 
 def generate_fibonacci(n):
-    """Returns a list of the first n Fibonacci numbers"""
-    pass
+
+    fib = [0] * n 
+    
+    if n <= 0:
+        return 0
+        
+    if n == 1:
+        return [1]
+        
+    if n == 2:
+        return [1,1]
+        
+    if n >= 3:
+        fib = [0] * n
+        fib[0] = 1
+        fib[1] = 1
+        
+        for step in range(2,n):
+            print step
+            fib[step] = fib[step-1] + fib[step-2]
+        
+    
+    return fib
 
 
 """
