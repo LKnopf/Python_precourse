@@ -1,37 +1,32 @@
+
 #!/usr/bin/env python
 """
 In this exercise we will create a number of classes and apply some elementary
 object-oriented programming.
-
 Implement the following classes describing some of the actors in an elementary
 video game.
-
 All actors have a property "strength". Strength is a number that can be
 increased by x by calling the method "increase_strength(x)", resp. "strength" is
 decreased by x by calling the method "decrease_strength(x)". If the strength drops
 below zero, it should remain zero.
-
 The property "is_alive" should start out True, and become False once strength
 reaches zero. Contrary to popular opinion, Zombies and Vampires should
 start out as alive.
-
 All actors will contain the method "fight()". Actor x can start a fight with
 Actor y by calling "x.fight(y)". The one with the highest strength wins,
 the other dies. The winner is damaged however, and gets its strength decreased
 by the strength of the opponent. If the strengths are equal, both die horribly.
-
 All actors have a "kills" property which increases by one when the actor wins a
 fight.
-
 Class Hero has an special property "magic". Hero's "strength" can increase only
 if "magic" is above zero. x increase in "strength" causes x decrease in "magic".
-
 Class Vampire will increase its property "strength" after winning a fight, instead
 of decreasing it, by half the strength of its enemy.
-
 Class Zombie will increase its "strength" by x at the beginning of every fight
 _it starts itself_, where x is a randomly generated number between 1 and 10.
 """
+
+from random import randint
 
 
 class Actor:
@@ -39,15 +34,71 @@ class Actor:
     This is supposed to be the most general class, at the top of the hierarchy:
     everything that shared between all actors can be put here.
     """
-    pass
+    def __init__(self):
+        self.is_alive = True
+        self.strength = 100
+        self.kills = 0
+    
+    def strength(self):
+        self.strength = 100
+        
+    def increase_strength(self, x):
+        self.strength = self.strength + x
+        
+    def decrease_strength(self, x):
+
+        self.strength = self.strength - x
+
+        if self.strength <= 0:
+            self.strength = 0
+            self.is_alive = False
+
+            
+    def fight(self,y):
+        if y.strength == self.strength:
+            self.is_alive = False
+            self.strength = 0
+            y.is_alive = False
+            y.strength = 0
+            
+        if y.strength > self.strength:
+            y.kills = y.kills + 1
+            
+            self.is_alive = False
+            
+            y.decrease_strength(self.strength)
+            self.strength = 0            
+            
+        if y.strength < self.strength:
+            self.kills = self.kills + 1
+            
+            y.is_alive = False
+            
+            self.decrease_strength(y.strength)
+            y.strength = 0
+        
 
 
 class Hero(Actor):
     """
     Heroes start out with 100 strength and 50 magic.
     """
-    pass
+    def __init__(self):
+        self.strength = 100
+        self.magic = 50
+        self.is_alive = True
+        self.kills = 0
 
+    def increase_strength(self, x):
+        
+        if self.magic < x:
+            self.strength = self.strength + self.magic
+            self.magic = 0
+            
+        if self.magic >= x:
+            self.strength = self.strength + x
+            self.magic = self.magic - x
+        
 
 class Zombie(Actor):
     """
@@ -55,7 +106,41 @@ class Zombie(Actor):
     Remember that Zombies increase their strength randomly at the beginning
     of each fight. How to generate a random number?
     """
-    pass
+    
+    def __init__(self):
+        self.strength = 150
+        self.is_alive = True
+        self.kills = 0
+        
+    def fight(self,y):
+        self.strength = self.strength + randint(1,10)    
+
+        if y.strength == self.strength:
+            self.is_alive = False
+            self.strength = 0
+            y.is_alive = False
+            y.strength = 0
+            
+        if y.strength > self.strength:
+            y.kills = y.kills + 1
+            
+            self.is_alive = False
+            
+            y.decrease_strength(self.strength)
+            self.strength = 0
+            
+        if y.strength < self.strength:
+            self.kills = self.kills + 1
+            
+            y.is_alive = False
+
+            self.decrease_strength(y.strength)
+            
+            y.strength = 0
+
+        
+
+
 
 
 class Vampire(Actor):
@@ -64,7 +149,36 @@ class Vampire(Actor):
     Remember that when a Vampire wins a fight it starts, it obtains half of the
     strength of the enemy it has beaten.
     """
-    pass
+    
+    def __init__(self):
+        self.strength = 70
+        self.is_alive = True
+        self.kills = 0
+        
+    def fight(self,y):  
+
+        if y.strength == self.strength:
+            self.is_alive = False
+            self.strength = 0
+            y.strength = 0
+            y.is_alive = False
+            
+        if y.strength > self.strength:
+            print "JA"
+            y.kills = y.kills + 1
+            
+            self.is_alive = False
+            
+            y.decrease_strength(self.strength)
+            self.strength = 0
+            
+        if y.strength < self.strength:
+            self.kills = self.kills + 1
+            
+            y.is_alive = False
+            
+            self.increase_strength(y.strength/2)
+            y.strength = 0
 
 
 """
@@ -136,3 +250,8 @@ def test_hero_loses_against_zombie():
 if __name__ == '__main__':
     from test_runner import run_tests
     run_tests()
+
+    Contact GitHub API Training Shop Blog About 
+
+    © 2017 GitHub, Inc. Terms Privacy Security Status Help 
+
