@@ -9,6 +9,10 @@ below in order to analyse the text:
 # load the text of Hamlet into the variable hamlet
 with open('data/hamlet.txt', 'r') as f:
     hamlet = f.read()
+    
+from collections import Counter
+import string
+import operator
 
 """
 How many words is Hamlet made of? Implement the function count_number_of_words, which counts
@@ -18,7 +22,8 @@ the number of words in a given text.
 
 def count_number_of_words(text):
     """ Counts the number of words (separated by white spaces or newlines) in a text """
-    pass
+    return len(text.split())
+    
 
 
 """
@@ -30,7 +35,9 @@ lower case characters.
 
 
 def convert_to_lowercase(text):
-    pass
+    
+    return text.lower()
+
 
 
 """
@@ -40,7 +47,10 @@ have to be removed. Implement the following function doing this.
 
 
 def remove_punctuation(text):
-    pass
+    
+    return text.translate(None, string.punctuation).replace('\n',' ')
+
+
 
 
 """
@@ -50,7 +60,8 @@ to return a dictionary, in which each word is a key and the value is the number 
 
 
 def occurrence_of_words(text):
-    pass
+    return Counter(text.split())
+
 
 
 """
@@ -63,7 +74,13 @@ Hint: a dictionary cannot be sorted, convert the dictionary to a data-structure 
 
 
 def get_most_occurring_words(count_dictionary, number=10):
-    pass
+    count_dictionary = Counter(count_dictionary)
+    a = dict(count_dictionary.most_common(number))
+    b = [(k,v) for k,v in a.iteritems()] 
+    b.sort(key = operator.itemgetter(0), reverse=True)
+    b.sort(key = operator.itemgetter(1), reverse=True)
+    return map (lambda t: (t[1], t[0]), b)
+
 
 
 """
@@ -79,7 +96,8 @@ with open('data/stop_words.txt', 'r') as f:
 
 
 def remove_forbidden_words(text, forbidden):
-    pass
+   return ' '.join(filter(lambda x: x.lower() not in forbidden,  text.split()))
+    
 
 
 """
@@ -147,4 +165,4 @@ def test_remove_forbidden_words():
 
 if __name__ == '__main__':
     from test_runner import run_tests
-    run_tests()
+run_tests()
